@@ -6,12 +6,47 @@
     font: inherit;
     vertical-align: baseline;
   }
+
+  :root {
+    --primary-color: #000000;
+    --secondary-color: #ffffff;
+    --text-color: #ffffff;
+    --background-color: #013402;
+    --border-color: #18c721;
+    
+
+  }
+
+  @font-face {
+    font-family: 'Hahmlet';
+    src: url(/Hahmlet.ttf);
+  }
   body {
-    background: black;
+    background: var(--background-color);
     margin: 0;
   }
   
   canvas {
     width: 1024px;
     height: 576px;
+    padding: 2px;
+    border: 10px solid var(--border-color);
+    border-radius: 8px;
+  }
+
+  h1 {
+    font-family: 'Hahmlet', sans-serif;
+    color: var(--text-color);
+    font-size: 50px;
+    text-align: center;
+  
+  }
+
+  .main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    gap:20px
   }
