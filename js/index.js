@@ -203,6 +203,55 @@ const monsters = [
     imageSrc: "./images/eskeleton.png",
     sprites: monsterSprites,
   }),
+  new Monster({
+    x: 80,
+    y: 256,
+    size: 15,
+    imageSrc: "./images/knight.png",
+    sprites: monsterSprites,
+  }),
+  new Monster({
+    x: 384,
+    y: 320,
+    size: 15,
+    imageSrc: "./images/mage.png",
+    sprites: monsterSprites,
+  }),
+  new Monster({
+    x: 400,
+    y: 336,
+    size: 15,
+    imageSrc: "./images/mage.png",
+    sprites: monsterSprites,
+  }),
+  new Monster({
+    x: 480,
+    y: 144,
+    size: 15,
+    imageSrc: "./images/robot.png",
+    sprites: monsterSprites,
+  }),
+  new Monster({
+    x: 480,
+    y: 160,
+    size: 15,
+    imageSrc: "./images/robot.png",
+    sprites: monsterSprites,
+  }),
+  new Monster({
+    x: 48,
+    y: 48,
+    size: 15,
+    imageSrc: "./images/master.png",
+    sprites: monsterSprites,
+  }),
+  new Monster({
+    x: 240,
+    y: 432,
+    size: 15,
+    imageSrc: "./images/boss.png",
+    sprites: monsterSprites,
+  }),
 ];
 
 const keys = {

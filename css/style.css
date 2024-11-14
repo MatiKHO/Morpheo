@@ -11,10 +11,8 @@
     --primary-color: #000000;
     --secondary-color: #ffffff;
     --text-color: #ffffff;
-    --background-color: #013402;
-    --border-color: #18c721;
-    
-
+    --background-color: #200040;
+    --border-color: #663399;
   }
 
   @font-face {
@@ -32,6 +30,7 @@
     padding: 2px;
     border: 10px solid var(--border-color);
     border-radius: 8px;
+    box-shadow: 0 0 10px 10px #15002a
   }
 
   h1 {
