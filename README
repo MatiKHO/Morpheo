@@ -1,0 +1,23 @@
+# GAME PROJECT - JAVASCRIPT
+
+## Project Requirements
+
+1. Project Goals
+    - Develop an interactive game using JavaScript. You can draw inspiration from classic games (like pong, snake, or any other), or create an original idea.
+
+2. Technical Requirements:
+    - Library: You can only use p5.js to facilitate graphics and animations.
+    - Project Structure:
+      - There must be a main file index.html.
+      - Create a javascript folder for .js files and a css folder for styles.
+    - Version Control: Upload the project to GitHub, making frequent and detailed commits about the changes made.
+
+3. Evaluation Criteria:
+    - Functionality: The game must be functional and meet the proposed objectives.
+    - Clean Code: The code must be readable, well-structured, and with clear comments to explain the main logic.
+    - Originality and Creativity: Originality of the game and creativity in mechanics or design will be valued.
+    - Interface and Usability: If the game is visual, it should be easy to understand and play. The design should be clear and attractive to the user.
+    
+4. Final Presentation:
+    - The project must be presented on Saturday. Each student will make a presentation showing the game in operation, explaining the mechanics and the challenges encountered during development.
+    - Prepare the presentation clearly, highlighting the achievements and learnings obtained during the development week.
