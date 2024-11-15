@@ -1,6 +1,6 @@
 
  class Monster {
-  constructor({ x, y, size, velocity = { x: 0, y: 0 }, imageSrc, sprites }) {
+  constructor({ x, y, size, velocity = { x: 0, y: 0 }, imageSrc, sprites, health = 3 }) {
     this.x = x;
     this.y = y;
     this.originalPosition = { x: x, y: y };
@@ -24,6 +24,17 @@
     this.sprites = sprites;
 
     this.currentSprite = Object.values(this.sprites)[0];
+    this.health = health
+    this.isInvincible = false;
+    this.elapsedInvincibilityTime = 0;
+    this.invincibilityInterval = 0.3;
+  }
+
+  receiveHit() {
+    if (this.isInvincible) return;
+
+    this.health--;
+    this.isInvincible = true;
   }
 
   draw(c) {
@@ -33,6 +44,10 @@
     // c.fillRect(this.x, this.y, this.width, this.height);
 
     // Draw player image
+    let alpha = 1;
+    if (this.isInvincible) alpha = 0.5;
+    c.save();
+    c.globalAlpha = alpha;
     c.drawImage(
       this.image,
       this.currentSprite.x,
@@ -44,6 +59,7 @@
       this.width,
       this.height
     );
+    c.restore();
   }
 
   // Update player position and check for collisions
@@ -52,6 +68,15 @@
 
     // Update elapsed time
     this.elapsedTime += deltaTime;
+
+    if(this.isInvincible) {
+      this.elapsedInvincibilityTime += deltaTime;
+
+      if(this.elapsedInvincibilityTime >= this.invincibilityInterval) {
+        this.isInvincible = false;
+        this.elapsedInvincibilityTime = 0;
+      }
+    }
 
     // Update current frame for player animation
     const intervalToGoNextFrame = 0.15;

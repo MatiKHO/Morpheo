@@ -11,7 +11,7 @@
     --primary-color: #000000;
     --secondary-color: #ffffff;
     --text-color: #ffffff;
-    --background-color: #200040;
+    --background-color: #190031;
     --border-color: #663399;
   }
 
@@ -38,13 +38,14 @@
     color: var(--text-color);
     font-size: 50px;
     text-align: center;
+    margin-bottom: 20px;
   
   }
 
   .main {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content:center;
     align-items: center;
     min-height: 100vh;
     gap:20px

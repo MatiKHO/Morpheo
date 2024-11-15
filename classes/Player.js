@@ -93,12 +93,52 @@ class Player {
     this.facing = "down";
     this.isAttacking = false;
     this.attackTimer = 0;
-    this.attackBox = {
-      x: this.x,
-      y: this.y,
-      width: 20,
-      height: 5,
+
+    this.attackBoxes = {
+      right: {
+        xOffset: 10,
+        yOffset: 9,
+        width: 20,
+        height: 5,
+      },
+      left: {
+        xOffset: -15,
+        yOffset: 9,
+        width: 20,
+        height: 5,
+      },
+      up: {
+        xOffset: 2,
+        yOffset: -15,
+        width: 5,
+        height: 20,
+      },
+      down: {
+        xOffset: 2,
+        yOffset: 10,
+        width: 5,
+        height: 20,
+      },
     }
+
+
+    this.attackBox = {
+      x: this.x + this.attackBoxes[this.facing].xOffset,
+      y: this.y + this.attackBoxes[this.facing].yOffset,
+      width: this.attackBoxes[this.facing].width,
+      height: this.attackBoxes[this.facing].height,
+    }
+
+    this.hasHitEnemy = false;
+    this.isInvincible = false;
+    this.elapsedInvincibilityTime = 0;
+    this.invincibilityInterval = 0.3;
+  }
+
+  receiveHit() {
+    if (this.isInvincible) return;
+
+    this.isInvincible = true;
   }
 
   switchBackToIdleState() {
@@ -114,9 +154,9 @@ class Player {
         break;
       case "left":
         this.currentSprite = this.sprites.walkLeft;
-        
         break;
     }
+    
   }
 
   attack() {
@@ -148,10 +188,15 @@ class Player {
     // c.fillRect(this.x, this.y, this.width, this.height);
 
      // Attack box debug code
-    c.fillStyle = "rgba(0, 0, 255, 0.5)";
-    c.fillRect(this.attackBox.x, this.attackBox.y, this.attackBox.width, this.attackBox.height);
+    // c.fillStyle = "rgba(0, 0, 255, 0.5)";
+    // c.fillRect(this.attackBox.x, this.attackBox.y, this.attackBox.width, this.attackBox.height);
 
     // Draw player image
+    let alpha = 1;
+    if (this.isInvincible) alpha = 0.5;
+
+    c.save();
+    c.globalAlpha = alpha;
     c.drawImage(
       this.image,
       this.currentSprite.x,
@@ -163,6 +208,7 @@ class Player {
       this.width,
       this.height
     );
+    c.restore();
 
     // Draw out our weapon
     if (this.isAttacking) {
@@ -194,6 +240,7 @@ class Player {
           break;
       }
       c.save();
+      c.globalAlpha = alpha;
       c.translate(this.x + xOffset, this.y + yOffset);
       c.rotate(angle);
       c.drawImage(
@@ -220,10 +267,21 @@ class Player {
     this.isAttacking = false;
     this.attackTimer = 0;
     this.switchBackToIdleState();
+    this.hasHitEnemy = false;
   }
 
     // Update elapsed time
     this.elapsedTime += deltaTime;
+
+    // Update invincibility time for player
+    if(this.isInvincible) {
+      this.elapsedInvincibilityTime += deltaTime;
+
+      if(this.elapsedInvincibilityTime >= this.invincibilityInterval) {
+        this.isInvincible = false;
+        this.elapsedInvincibilityTime = 0;
+      }
+    }
 
     // Update current frame for player animation
     const intervalToGoNextFrame = 0.15;
@@ -232,6 +290,9 @@ class Player {
         (this.currentFrame + 1) % this.currentSprite.frameCount;
       this.elapsedTime -= intervalToGoNextFrame;
     }
+
+
+    
     // Update horizontal position and check collisions
     this.updateHorizontalPosition(deltaTime);
     this.checkForHorizontalCollisions(collisionBlocks);
@@ -245,6 +306,13 @@ class Player {
       x: this.x + this.width / 2,
       y: this.y + this.height / 2,
     };
+
+    this.attackBox = {
+      x: this.x + this.attackBoxes[this.facing].xOffset,
+      y: this.y + this.attackBoxes[this.facing].yOffset,
+      width: this.attackBoxes[this.facing].width,
+      height: this.attackBoxes[this.facing].height,
+    }
   }
 
   updateHorizontalPosition(deltaTime) {

@@ -21,3 +21,43 @@
 4. Final Presentation:
     - The project must be presented on Saturday. Each student will make a presentation showing the game in operation, explaining the mechanics and the challenges encountered during development.
     - Prepare the presentation clearly, highlighting the achievements and learnings obtained during the development week.
+
+## Summary of the project
+# Resumen de Archivos
+
+## classes/
+- **CollisionBlock.js**: Define la clase `CollisionBlock` que representa un bloque de colisión en el juego.
+- **Heart.js**: Define la clase `Heart` que representa un corazón (vida) en el juego.
+- **Monster.js**: Define la clase `Monster` que representa a los monstruos en el juego.
+- **Player.js**: Define la clase `Player` que representa al jugador en el juego.
+
+## css/
+- **style.css**: Contiene los estilos CSS para el juego.
+
+## data/
+- **collisions.js**: Contiene datos de colisiones para el mapa del juego.
+- **l_Base.js**: Contiene datos de la capa base del mapa.
+- **l_Boxes.js**: Contiene datos de la capa de cajas del mapa.
+- **l_Collisions.js**: Contiene datos de la capa de colisiones del mapa.
+- **l_Enemies.js**: Contiene datos de la capa de enemigos del mapa.
+- **l_Frogs.js**: Contiene datos de la capa de ranas del mapa.
+- **l_Front_Renders.js**: Contiene datos de la capa de renderizado frontal del mapa.
+- **l_House.js**: Contiene datos de la capa de casas del mapa.
+- **l_Terrain.js**: Contiene datos de la capa de terreno del mapa.
+- **l_Trees_2.js**: Contiene datos de la segunda capa de árboles del mapa.
+- **l_Trees_3.js**: Contiene datos de la tercera capa de árboles del mapa.
+- **l_Trees.js**: Contiene datos de la capa de árboles del mapa.
+
+## images/
+- Contiene las imágenes utilizadas en el juego.
+
+## js/
+- **eventListeners.js**: Maneja los eventos de entrada del usuario.
+- **index.js**: Archivo principal del juego que inicializa y ejecuta el juego. Define los monstruos, el jugador, las colisiones, y maneja la animación y renderizado del juego.
+- **utils.js**: Contiene funciones utilitarias que se utilizan en el juego.
+
+## index.html
+- Archivo HTML principal que carga los scripts y estilos necesarios para el juego.
+
+## README
+- Archivo de documentación que probablemente contiene información sobre el proyecto y cómo configurarlo.

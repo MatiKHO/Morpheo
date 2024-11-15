@@ -131,8 +131,8 @@ const renderStaticLayers = async (layersData) => {
 
 // Change xy coordinates to move player's default position
 const player = new Player({
-  x: 100,
-  y: 400,
+  x: 288,
+  y: 224,
   size: 15,
 });
 
@@ -271,11 +271,55 @@ const keys = {
 
 let lastTime = performance.now();
 let frontRendersCanvas;
+const hearts = [
+  new Heart({
+    x: 10,
+    y: 10,
+  }),
+  new Heart({
+    x: 32,
+    y: 10,
+  }),
+  new Heart({
+    x: 54,
+    y: 10,
+  })
+];
+
+const leafs = [
+  new Particle({
+    x: 20,
+    y: 20,
+    velocity: {
+      x: 0.08,
+      y:0.08,
+    }
+  }),
+]
+
+let elapsedTime = 0;
+
+
 function animate(backgroundCanvas) {
   // Calculate delta time
   const currentTime = performance.now();
   const deltaTime = (currentTime - lastTime) / 1000;
   lastTime = currentTime;
+  elapsedTime += deltaTime;
+
+  if(elapsedTime > 1.5) {
+    leafs.push(
+      new Particle({
+        x: Math.random() * 500,
+        y: Math.random() * 50,
+        velocity: {
+          x: 0.08,
+          y:0.08,
+        }
+      })
+    )
+    elapsedTime = 0;
+  }
 
   // Update player position
   player.handleInput(keys);
@@ -303,10 +347,67 @@ function animate(backgroundCanvas) {
     const monster = monsters[i];
     monster.update(deltaTime, collisionBlocks);
     monster.draw(c);
+
+    // Detect for collision
+    if (
+      player.attackBox.x + player.attackBox.width >= monster.x && //  Attack from the right
+      player.attackBox.x <= monster.x + monster.width && // Attack from the left
+      player.attackBox.y + player.attackBox.height >= monster.y && // Attack from the bottom
+      player.attackBox.y <= monster.y + monster.height && 
+      player.isAttacking && !player.hasHitEnemy// Attack from the top
+    ) {
+      monster.receiveHit();
+      player.hasHitEnemy = true;
+
+      if(monster.health <= 0) {
+        monsters.splice(i, 1);
+      }
+    }
+
+    if (
+      player.x + player.width >= monster.x && //  Attack from the right
+      player.x <= monster.x + monster.width && // Attack from the left
+      player.y + player.height >= monster.y && // Attack from the bottom
+      player.y <= monster.y + monster.height && !player.isInvincible
+    ) {
+      player.receiveHit();
+
+      const filledHearts = hearts.filter((heart) => heart.currentFrame === 4);
+
+      if (filledHearts.length > 0) {
+        filledHearts[filledHearts.length - 1].currentFrame = 0;
+      }
+     
+    if (filledHearts.length <= 1) {
+      console.log("Game Over");
+    }
+    }
+
   }
 
+  
+
   c.drawImage(frontRendersCanvas, 0, 0);
+
+  for (let i = leafs.length - 1; i >= 0; i--) {
+    const leaf = leafs[i];
+    leaf.update(deltaTime);
+    leaf.draw(c);
+
+    if (leaf.alpha <= 0) {
+      leafs.splice(i, 1);
+    }
+  }
+
+  
   c.restore();
+
+  c.save()
+  c.scale(MAP_SCALE, MAP_SCALE)
+  hearts.forEach(heart => {
+    heart.draw(c);
+  });
+  c.restore()
 
   requestAnimationFrame(() => animate(backgroundCanvas));
 }
@@ -315,7 +416,6 @@ const startRendering = async () => {
   try {
     const backgroundCanvas = await renderStaticLayers(layersData);
     frontRendersCanvas = await renderStaticLayers(frontRendersLayersData);
-    console.log(frontRendersCanvas);
     if (!backgroundCanvas) {
       console.error("Failed to create the background canvas");
       return;
