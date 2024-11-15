@@ -30,6 +30,7 @@
 - **Heart.js**: Define la clase `Heart` que representa un corazón (vida) en el juego.
 - **Monster.js**: Define la clase `Monster` que representa a los monstruos en el juego.
 - **Player.js**: Define la clase `Player` que representa al jugador en el juego.
+- **Particle.js**: Define la clase `Particle` que representa partículas en el juego.
 
 ## css/
 - **style.css**: Contiene los estilos CSS para el juego.
@@ -59,5 +60,3 @@
 ## index.html
 - Archivo HTML principal que carga los scripts y estilos necesarios para el juego.
 
-## README
-- Archivo de documentación que probablemente contiene información sobre el proyecto y cómo configurarlo.
