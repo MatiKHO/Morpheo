@@ -74,7 +74,7 @@ class Particle {
 
         // Update particle opacity / alpha
         const intervalToChangeOpacity = 15;
-        if (this.totalElapsedTime > intervalToChangeOpacity) {
+        if (this.totalElapsedTime > 15) {
             this.alpha -= 0.01;
             this.alpha = Math.max(0, this.alpha);
         }

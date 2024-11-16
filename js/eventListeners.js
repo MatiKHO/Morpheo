@@ -43,3 +43,4 @@ document.addEventListener("visibilitychange", () => {
     lastTime = performance.now();
   }
 });
+

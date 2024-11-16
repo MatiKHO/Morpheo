@@ -1,6 +1,6 @@
 
 class Heart {
-  constructor({ x, y}) {
+  constructor({ x, y }) {
     this.x = x;
     this.y = y;
     this.width = 20;
@@ -10,28 +10,28 @@ class Heart {
       y: this.y + this.height / 2,
     };
 
-    this.loaded = false;
-    this.image = new Image();
+    this.loaded = false; 
+    this.image = new Image(); 
     this.image.onload = () => {
       this.loaded = true;
     };
     this.image.src = "/images/heart.png";
 
-    this.currentFrame = 4;
+    this.currentFrame = 4; 
 
-    this.currentSprite = {
+    this.currentSprite = { //
       x: 0,
       y: 0,
       width: 16,
       height: 16,
-      frameCount: 4,
+      frameCount: 4, 
     };
   }
 
  
 
   draw(c) {
-    if (!this.loaded ) return;
+    if (!this.loaded ) return; 
    
 
     c.drawImage(

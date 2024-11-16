@@ -254,6 +254,42 @@ const monsters = [
   }),
 ];
 
+const chests = [
+  new Chest ({
+    x: 304,
+    y: 288,
+    size: 15,
+    imageSrc: './images/chest.png',
+    sprites: {
+      x: 16,
+      y: 7,
+      frameCount: 0,
+    }
+  }),
+  new Chest ({
+    x: 528,
+    y: 144,
+    size: 15,
+    imageSrc: './images/chest.png',
+    sprites: {
+      x: 16,
+      y: 7,
+      frameCount: 0,
+    }
+  }),
+  new Chest ({
+    x: 224,
+    y: 416,
+    size: 15,
+    imageSrc: './images/chest.png',
+    sprites: {
+      x: 16,
+      y: 7,
+      frameCount: 0,
+    }
+  }),
+]
+
 const keys = {
   w: {
     pressed: false,
@@ -295,7 +331,9 @@ const leafs = [
       y:0.08,
     }
   }),
-]
+];
+
+
 
 let elapsedTime = 0;
 
@@ -342,6 +380,14 @@ function animate(backgroundCanvas) {
   c.drawImage(backgroundCanvas, 0, 0);
   player.draw(c);
 
+  // Render chests
+  for (let i = chests.length - 1; i >= 0; i--) {
+    const chest = chests[i];
+    chest.update(deltaTime, collisionBlocks);
+    chest.draw(c);
+  }
+  
+
   // Render out monsters
   for (let i = monsters.length - 1; i >= 0; i--) {
     const monster = monsters[i];
@@ -364,6 +410,8 @@ function animate(backgroundCanvas) {
       }
     }
 
+    // Detect for player attack
+
     if (
       player.x + player.width >= monster.x && //  Attack from the right
       player.x <= monster.x + monster.width && // Attack from the left
@@ -377,15 +425,27 @@ function animate(backgroundCanvas) {
       if (filledHearts.length > 0) {
         filledHearts[filledHearts.length - 1].currentFrame = 0;
       }
-     
-    if (filledHearts.length <= 1) {
-      console.log("Game Over");
-    }
-    }
+
+      if(filledHearts.length === 0) {
+       const gameOverElement = document.getElementById('game-over');
+        gameOverElement.classList.add('visible');
+
+       const restartButton = document.getElementById('restart-button');
+        restartButton.classList.add('button-visible');
+
+        restartButton.addEventListener('click', () => {
+        location.reload();
+          });
+        
+
+        
+      }
+
+      }
 
   }
 
-  
+
 
   c.drawImage(frontRendersCanvas, 0, 0);
 
@@ -408,6 +468,8 @@ function animate(backgroundCanvas) {
     heart.draw(c);
   });
   c.restore()
+
+  
 
   requestAnimationFrame(() => animate(backgroundCanvas));
 }
