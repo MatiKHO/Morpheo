@@ -13,7 +13,7 @@ const TILE_SIZE = 16;
 const MAP_WIDTH = TILE_SIZE * MAP_COLS;
 const MAP_HEIGTH = TILE_SIZE * MAP_ROWS;
 
-const MAP_SCALE = dpr + 1;
+const MAP_SCALE = dpr + 2;
 
 const VIEWPORT_WIDTH = canvas.width / MAP_SCALE;
 const VIEWPORT_HEIGHT = canvas.height / MAP_SCALE;
