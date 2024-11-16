@@ -17,6 +17,10 @@ window.addEventListener("keydown", (event) => {
       event.preventDefault();
       player.attack();
       break;
+    case "Enter":
+      event.preventDefault();
+      keys.enter.pressed = true;
+      break;
   }
 });
 
@@ -33,6 +37,10 @@ window.addEventListener("keyup", (event) => {
       break;
     case "d":
       keys.d.pressed = false;
+      break;
+      case "Enter":
+      event.preventDefault();
+      keys.enter.pressed = true;
       break;
   }
 });

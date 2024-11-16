@@ -24,6 +24,27 @@ const VIEWPORT_CENTER_Y = VIEWPORT_HEIGHT / 2;
 const MAX_SCROLL_X = MAP_WIDTH - VIEWPORT_WIDTH;
 const MAX_SCROLL_Y = MAP_HEIGTH - VIEWPORT_HEIGHT;
 
+// Music
+const soundEffectsVolume = 0.5;
+
+const backgroundMusic = new Audio('./music/game/main-theme.ogg');
+backgroundMusic.loop = true;
+backgroundMusic.volume = 0.2;
+
+// Sound effects
+const attackSound = new Audio('./music/game/attack.wav');
+attackSound.volume = soundEffectsVolume;
+const killSound = new Audio('./music/game/kill.wav');
+killSound.volume = soundEffectsVolume;
+const enemyHitSound = new Audio('./music/game/enemyHit.wav');
+enemyHitSound.volume = soundEffectsVolume;
+const obtainKeySound = new Audio('./music/game/obtainKey.wav');
+obtainKeySound.volume = soundEffectsVolume;
+const restartSound = new Audio('./music/menu/accept.wav');
+restartSound.volume = soundEffectsVolume;
+
+
+
 const layersData = {
   l_Base: l_Base,
   l_Terrain: l_Terrain,
@@ -122,12 +143,11 @@ const renderStaticLayers = async (layersData) => {
     }
   }
 
-  // Optionally draw collision blocks and platforms for debugging
-  // collisionBlocks.forEach(block => block.draw(offscreenContext));
+  
 
   return offscreenCanvas;
 };
-// END - Tile setup
+
 
 // Change xy coordinates to move player's default position
 const player = new Player({
@@ -254,41 +274,61 @@ const monsters = [
   }),
 ];
 
+const chestSprites = {
+  closed: {
+    x: 0,
+    y: 0,
+    width: 16,
+    height: 16,
+  },
+  open: {
+    x: 16,
+    y: 0,
+    width: 16,
+    height: 16,
+  },
+};
+
+const keysObtained = [];
+
 const chests = [
-  new Chest ({
+  new Chest({
     x: 304,
     y: 288,
     size: 15,
-    imageSrc: './images/chest.png',
-    sprites: {
-      x: 16,
-      y: 7,
-      frameCount: 0,
-    }
+    imageSrc: "./images/chest.png",
+    sprites: chestSprites,
+    key:  new Key({
+      x: 98,
+      y:10,
+      imageSrc: "./images/key.png",
+    }),
   }),
-  new Chest ({
+  new Chest({
     x: 528,
     y: 144,
     size: 15,
-    imageSrc: './images/chest.png',
-    sprites: {
-      x: 16,
-      y: 7,
-      frameCount: 0,
-    }
+    imageSrc: "./images/chest.png",
+    sprites: chestSprites,
+    key: new Key({
+      x: 120,
+      y:10,
+      imageSrc: "./images/key.png",
+    }),
   }),
-  new Chest ({
+  new Chest({
     x: 224,
     y: 416,
     size: 15,
-    imageSrc: './images/chest.png',
-    sprites: {
-      x: 16,
-      y: 7,
-      frameCount: 0,
-    }
+    imageSrc: "./images/chest.png",
+    sprites: chestSprites,
+    key: new Key({
+      x: 142,
+      y:10,
+      imageSrc: "./images/key.png",
+    }),
   }),
-]
+];
 
 const keys = {
   w: {
@@ -303,6 +343,9 @@ const keys = {
   d: {
     pressed: false,
   },
+  enter: {
+    pressed: false,
+  }
 };
 
 let lastTime = performance.now();
@@ -319,8 +362,9 @@ const hearts = [
   new Heart({
     x: 54,
     y: 10,
-  })
+  }),
 ];
+  
 
 const leafs = [
   new Particle({
@@ -328,15 +372,12 @@ const leafs = [
     y: 20,
     velocity: {
       x: 0.08,
-      y:0.08,
-    }
+      y: 0.08,
+    },
   }),
 ];
 
-
-
 let elapsedTime = 0;
-
 
 function animate(backgroundCanvas) {
   // Calculate delta time
@@ -345,17 +386,17 @@ function animate(backgroundCanvas) {
   lastTime = currentTime;
   elapsedTime += deltaTime;
 
-  if(elapsedTime > 1.5) {
+  if (elapsedTime > 1.5) {
     leafs.push(
       new Particle({
         x: Math.random() * 500,
         y: Math.random() * 50,
         velocity: {
           x: 0.08,
-          y:0.08,
-        }
+          y: 0.08,
+        },
       })
-    )
+    );
     elapsedTime = 0;
   }
 
@@ -383,10 +424,14 @@ function animate(backgroundCanvas) {
   // Render chests
   for (let i = chests.length - 1; i >= 0; i--) {
     const chest = chests[i];
-    chest.update(deltaTime, collisionBlocks);
+    chest.update(deltaTime);
+    chest.checkForCollisions(player);
     chest.draw(c);
+
+    if (chest.isPlayerNear(player) && keys.enter.pressed) {
+      chest.open();
+    }
   }
-  
 
   // Render out monsters
   for (let i = monsters.length - 1; i >= 0; i--) {
@@ -399,26 +444,30 @@ function animate(backgroundCanvas) {
       player.attackBox.x + player.attackBox.width >= monster.x && //  Attack from the right
       player.attackBox.x <= monster.x + monster.width && // Attack from the left
       player.attackBox.y + player.attackBox.height >= monster.y && // Attack from the bottom
-      player.attackBox.y <= monster.y + monster.height && 
-      player.isAttacking && !player.hasHitEnemy// Attack from the top
+      player.attackBox.y <= monster.y + monster.height &&
+      player.isAttacking &&
+      !player.hasHitEnemy // Attack from the top
     ) {
       monster.receiveHit();
       player.hasHitEnemy = true;
+      attackSound.play();
 
-      if(monster.health <= 0) {
+      if (monster.health <= 0) {
         monsters.splice(i, 1);
+        killSound.play();
       }
     }
 
     // Detect for player attack
-
     if (
       player.x + player.width >= monster.x && //  Attack from the right
       player.x <= monster.x + monster.width && // Attack from the left
       player.y + player.height >= monster.y && // Attack from the bottom
-      player.y <= monster.y + monster.height && !player.isInvincible
+      player.y <= monster.y + monster.height &&
+      !player.isInvincible
     ) {
       player.receiveHit();
+      enemyHitSound.play();
 
       const filledHearts = hearts.filter((heart) => heart.currentFrame === 4);
 
@@ -426,26 +475,41 @@ function animate(backgroundCanvas) {
         filledHearts[filledHearts.length - 1].currentFrame = 0;
       }
 
-      if(filledHearts.length === 0) {
-       const gameOverElement = document.getElementById('game-over');
-        gameOverElement.classList.add('visible');
-
-       const restartButton = document.getElementById('restart-button');
-        restartButton.classList.add('button-visible');
-
-        restartButton.addEventListener('click', () => {
-        location.reload();
-          });
+      if (filledHearts.length === 0) {
+        const gameOverElement = document.getElementById("game-over");
+        gameOverElement.classList.add("visible");
+       
+        const restartButton = document.getElementById("restart-button");
+        restartButton.classList.add("button-visible");
         
+        restartSound.play();
 
-        
+
+        restartButton.addEventListener("click", () => {
+          location.reload();
+
+
+        });
+        return;
       }
-
-      }
-
+    }
   }
 
+  // Check for victory
+  if(keysObtained.length === 3) {
+    const victoryElement = document.getElementById('victory');
+    victoryElement.classList.add('visible');
 
+    const restartButton = document.getElementById('restart-button');
+    restartButton.classList.add('button-visible');
+
+    restartSound.play();
+
+    restartButton.addEventListener('click', () => {
+      location.reload();
+    });
+    return;
+  }
 
   c.drawImage(frontRendersCanvas, 0, 0);
 
@@ -459,17 +523,18 @@ function animate(backgroundCanvas) {
     }
   }
 
-  
   c.restore();
 
-  c.save()
-  c.scale(MAP_SCALE, MAP_SCALE)
-  hearts.forEach(heart => {
+  c.save();
+  c.scale(MAP_SCALE, MAP_SCALE);
+  hearts.forEach((heart) => {
     heart.draw(c);
   });
-  c.restore()
-
-  
+  keysObtained.forEach((key, index) => {
+    key.x = 98 + index * 22; // Ajusta la posición de las llaves
+    key.draw(c);
+  });
+  c.restore();
 
   requestAnimationFrame(() => animate(backgroundCanvas));
 }
@@ -482,6 +547,7 @@ const startRendering = async () => {
       console.error("Failed to create the background canvas");
       return;
     }
+    backgroundMusic.play();
 
     animate(backgroundCanvas);
   } catch (error) {
