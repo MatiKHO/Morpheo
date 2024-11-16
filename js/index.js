@@ -27,23 +27,26 @@ const MAX_SCROLL_Y = MAP_HEIGTH - VIEWPORT_HEIGHT;
 // Music
 const soundEffectsVolume = 0.5;
 
-const backgroundMusic = new Audio('./music/game/main-theme.ogg');
+const backgroundMusic = new Audio("./music/game/main-theme.ogg");
 backgroundMusic.loop = true;
 backgroundMusic.volume = 0.2;
 
 // Sound effects
-const attackSound = new Audio('./music/game/attack.wav');
+const attackSound = new Audio("./music/game/attack.wav");
 attackSound.volume = soundEffectsVolume;
-const killSound = new Audio('./music/game/kill.wav');
+const killSound = new Audio("./music/game/kill.wav");
 killSound.volume = soundEffectsVolume;
-const enemyHitSound = new Audio('./music/game/enemyHit.wav');
+const enemyHitSound = new Audio("./music/game/enemyHit.wav");
 enemyHitSound.volume = soundEffectsVolume;
-const obtainKeySound = new Audio('./music/game/obtainKey.wav');
+const obtainKeySound = new Audio("./music/game/obtainKey.wav");
 obtainKeySound.volume = soundEffectsVolume;
-const restartSound = new Audio('./music/menu/accept.wav');
+const restartSound = new Audio("./music/menu/accept.wav");
 restartSound.volume = soundEffectsVolume;
 
-
+document.getElementById("play-button").addEventListener("click", function () {
+  this.style.display = "none";
+  backgroundMusic.play();
+});
 
 const layersData = {
   l_Base: l_Base,
@@ -143,11 +146,8 @@ const renderStaticLayers = async (layersData) => {
     }
   }
 
-  
-
   return offscreenCanvas;
 };
-
 
 // Change xy coordinates to move player's default position
 const player = new Player({
@@ -298,9 +298,9 @@ const chests = [
     size: 15,
     imageSrc: "./images/chest.png",
     sprites: chestSprites,
-    key:  new Key({
+    key: new Key({
       x: 98,
-      y:10,
+      y: 10,
       imageSrc: "./images/key.png",
     }),
   }),
@@ -312,7 +312,7 @@ const chests = [
     sprites: chestSprites,
     key: new Key({
       x: 120,
-      y:10,
+      y: 10,
       imageSrc: "./images/key.png",
     }),
   }),
@@ -324,7 +324,7 @@ const chests = [
     sprites: chestSprites,
     key: new Key({
       x: 142,
-      y:10,
+      y: 10,
       imageSrc: "./images/key.png",
     }),
   }),
@@ -345,7 +345,7 @@ const keys = {
   },
   enter: {
     pressed: false,
-  }
+  },
 };
 
 let lastTime = performance.now();
@@ -364,7 +364,6 @@ const hearts = [
     y: 10,
   }),
 ];
-  
 
 const leafs = [
   new Particle({
@@ -478,17 +477,14 @@ function animate(backgroundCanvas) {
       if (filledHearts.length === 0) {
         const gameOverElement = document.getElementById("game-over");
         gameOverElement.classList.add("visible");
-       
+
         const restartButton = document.getElementById("restart-button");
         restartButton.classList.add("button-visible");
-        
-        restartSound.play();
 
+        restartSound.play();
 
         restartButton.addEventListener("click", () => {
           location.reload();
-
-
         });
         return;
       }
@@ -496,16 +492,16 @@ function animate(backgroundCanvas) {
   }
 
   // Check for victory
-  if(keysObtained.length === 3) {
-    const victoryElement = document.getElementById('victory');
-    victoryElement.classList.add('visible');
+  if (keysObtained.length === 3 && filledHearts.length !== 0) {
+    const victoryElement = document.getElementById("victory");
+    victoryElement.classList.add("visible");
 
-    const restartButton = document.getElementById('restart-button');
-    restartButton.classList.add('button-visible');
+    const restartButton = document.getElementById("restart-button");
+    restartButton.classList.add("button-visible");
 
     restartSound.play();
 
-    restartButton.addEventListener('click', () => {
+    restartButton.addEventListener("click", () => {
       location.reload();
     });
     return;

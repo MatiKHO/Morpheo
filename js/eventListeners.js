@@ -45,10 +45,22 @@ window.addEventListener("keyup", (event) => {
   }
 });
 
+
+window.addEventListener('gamepadconnected', (event) =>{
+  console.log('Gamepad connected:', event.gamepad);
+});
+
+window.addEventListener('gamepaddisconnected', (event) =>{
+  console.log('Gamepad disconnected:', event.gamepad);
+});
+
 // On return to game's tab, ensure delta time is reset
 document.addEventListener("visibilitychange", () => {
   if (!document.hidden) {
     lastTime = performance.now();
   }
 });
+
+
+
 
